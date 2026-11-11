@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QR Studio | Free custom QR code creator</title>
+<meta name="description" content="Create beautiful, custom QR codes for free: links, Wi-Fi, contacts, WhatsApp and more. Add your logo, colours and frames, download PNG or SVG. Private: everything runs in your browser.">
+<meta property="og:title" content="QR Studio | Free custom QR code creator">
+<meta property="og:description" content="Design QR codes with your own logo, colours and frames. Bulk export, scan check, no sign-up, no tracking.">
+<meta name="theme-color" content="#0b1a2f">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="./" aria-label="QR Studio home">
+    <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><rect width="32" height="32" rx="9" fill="url(#bg)"/><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1d5fe0"/><stop offset="1" stop-color="#3daee9"/></linearGradient></defs><g fill="#fff"><rect x="6" y="6" width="8" height="8" rx="2"/><rect x="18" y="6" width="8" height="8" rx="2"/><rect x="6" y="18" width="8" height="8" rx="2"/><rect x="18" y="18" width="3.4" height="3.4" rx="1"/><rect x="22.6" y="22.6" width="3.4" height="3.4" rx="1"/><rect x="18" y="22.6" width="3.4" height="3.4" rx="1"/></g></svg>
+    <span>QR Studio</span>
+  </a>
+  <nav class="modes" role="tablist" aria-label="Sections">
+    <button role="tab" data-view="studio" class="on">Studio</button>
+    <button role="tab" data-view="bulk">Bulk</button>
+    <button role="tab" data-view="saved">Saved <span id="saved-count" class="count" hidden></span></button>
+    <button role="tab" data-view="help">Help</button>
+  </nav>
+  <div class="top-actions">
+    <button id="theme" class="icon-btn" aria-label="Switch light or dark theme" title="Switch theme">
+      <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- ================= STUDIO ================= -->
+  <section id="view-studio" class="view">
+    <div class="hero">
+      <h1>Design a QR code people actually want to scan</h1>
+      <p>Free, no sign-up, nothing leaves your device. Pick what it does, style it, add your logo, download.</p>
+    </div>
+    <div class="studio">
+      <div class="controls">
+        <div class="steps" role="tablist" aria-label="Design steps">
+          <button role="tab" class="on" data-tab="content"><b>1</b> Content</button>
+          <button role="tab" data-tab="style"><b>2</b> Style</button>
+          <button role="tab" data-tab="logo"><b>3</b> Logo</button>
+          <button role="tab" data-tab="frame"><b>4</b> Frame</button>
+        </div>
+
+        <!-- 1 Content -->
+        <div class="pane on" id="pane-content">
+          <div class="types" id="types" role="radiogroup" aria-label="What should the QR code do?"></div>
+          <p class="hint" id="type-hint"></p>
+          <div class="fields" id="fields"></div>
+          <p class="meta" id="meta"></p>
+        </div>
+
+        <!-- 2 Style -->
+        <div class="pane" id="pane-style">
+          <h3>Quick looks</h3><div class="presets" id="presets"></div>
+          <h3>Pattern</h3><div class="opts" id="o-dots" data-bind="style.dots"></div>
+          <div class="two">
+            <div><h3>Eye frame</h3><div class="opts" id="o-eyeFrame" data-bind="style.eyeFrame"></div></div>
+            <div><h3>Eye centre</h3><div class="opts" id="o-eyeBall" data-bind="style.eyeBall"></div></div>
+          </div>
+          <h3>Colours</h3>
+          <div class="row">
+            <label class="fld">Main colour<input type="color" data-bind="style.fg"></label>
+            <label class="fld">Fill<select data-bind="style.grad"><option value="none">Solid</option><option value="linear">Gradient</option><option value="radial">Radial gradient</option></select></label>
+          </div>
+          <div class="row" data-showif="style.grad!=none">
+            <label class="fld">Second colour<input type="color" data-bind="style.fg2"></label>
+            <label class="fld" data-showif="style.grad=linear"><span>Angle <b data-out="style.angle"></b>°</span><input type="range" min="0" max="360" step="5" data-bind="style.angle"></label>
+          </div>
+          <label class="check"><input type="checkbox" data-bind="style.eyeCustom"> Use a different colour for the eyes</label>
+          <div class="row" data-showif="style.eyeCustom"><label class="fld">Eye colour<input type="color" data-bind="style.eyeColor"></label></div>
+          <div class="row">
+            <label class="fld">Background<input type="color" data-bind="style.bg"></label>
+            <label class="check pad-top"><input type="checkbox" data-bind="style.transp"> Transparent (PNG/SVG)</label>
+          </div>
+          <h3>Shape &amp; safety</h3>
+          <div class="row">
+            <label class="fld"><span>Corner roundness <b data-out="style.radius"></b></span><input type="range" min="0" max="40" data-bind="style.radius"></label>
+            <label class="fld"><span>Quiet border <b data-out="style.margin"></b></span><input type="range" min="0" max="8" data-bind="style.margin"></label>
+          </div>
+          <label class="fld">Error correction
+            <select data-bind="style.ecc"><option value="L">Low (7%): simplest code</option><option value="M">Medium (15%)</option><option value="Q">Quartile (25%)</option><option value="H">High (30%): best with logos</option></select>
+          </label>
+          <p class="hint">A logo in the middle automatically switches this to High.</p>
+        </div>
+
+        <!-- 3 Logo -->
+        <div class="pane" id="pane-logo">
+          <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload a logo or photo">
+            <input type="file" id="logo-file" accept="image/*" hidden>
+            <img id="logo-thumb" alt="" hidden>
+            <div><b>Add your logo or photo</b><span>Click, or drop an image here</span></div>
+          </div>
+          <h3>Or pick an icon</h3><div class="icons" id="icons"></div>
+          <div class="row" data-showif="logo.src">
+            <label class="fld">Placement
+              <select data-bind="logo.place"><option value="center">In the middle of the QR</option><option value="top">On top (Card frame)</option></select>
+            </label>
+            <label class="fld">Shape
+              <select data-bind="logo.shape"><option value="circle">Circle</option><option value="rounded">Rounded square</option><option value="square">Square</option></select>
+            </label>
+          </div>
+          <div data-showif="logo.src">
+            <label class="fld" data-showif="logo.place=center"><span>Logo size <b data-out="logo.size"></b>%</span><input type="range" min="10" max="28" data-bind="logo.size"></label>
+            <label class="check" data-showif="logo.place=center"><input type="checkbox" data-bind="logo.pad"> White space around the logo</label>
+            <button class="btn ghost" id="logo-remove" type="button">Remove logo</button>
+          </div>
+          <p class="hint">Tip: keep it at 22% or less. The scan check below the preview warns you if it is too big.</p>
+        </div>
+
+        <!-- 4 Frame -->
+        <div class="pane" id="pane-frame">
+          <div class="opts big" id="o-frame" data-bind="frame.kind">
+            <button type="button" data-v="none"><span>Plain</span><small>Just the code</small></button>
+            <button type="button" data-v="card"><span>Profile card</span><small>Photo, name, code</small></button>
+            <button type="button" data-v="badge"><span>Badge</span><small>“Scan me” bar</small></button>
+          </div>
+          <div data-showif="frame.kind=card">
+            <label class="fld">Name or title<input type="text" data-bind="frame.title" maxlength="60"></label>
+            <label class="fld">Caption<input type="text" data-bind="frame.caption" maxlength="80" placeholder="e.g. Scan to view my portfolio"></label>
+            <label class="check"><input type="checkbox" data-bind="frame.showUrl"> Show the web address under the code</label>
+            <p class="hint">Want your photo on top? In the Logo step, set Placement to “On top”.</p>
+          </div>
+          <div data-showif="frame.kind=badge"><label class="fld">Badge text<input type="text" data-bind="frame.badge" maxlength="24"></label></div>
+          <div class="row" data-showif="frame.kind!=none">
+            <label class="fld">Colour 1<input type="color" data-bind="frame.c1"></label>
+            <label class="fld" data-showif="frame.kind=card">Colour 2<input type="color" data-bind="frame.c2"></label>
+            <label class="fld">Text colour<input type="color" data-bind="frame.tc"></label>
+          </div>
+        </div>
+      </div>
+
+      <aside class="stage">
+        <div class="preview-card">
+          <div id="preview" class="preview" aria-live="polite"></div>
+          <div id="scan" class="scan" role="status"></div>
+          <ul id="warnings" class="warnings"></ul>
+          <div class="actions">
+            <select id="px" aria-label="Image size"><option value="512">512 px</option><option value="1024">1024 px</option><option value="2048">2048 px</option><option value="4096">4096 px (print)</option></select>
+            <button class="btn" id="dl-png" type="button">Download PNG</button>
+          </div>
+          <div class="actions two-col">
+            <button class="btn ghost" id="dl-svg" type="button">Download SVG</button>
+            <button class="btn ghost" id="copy" type="button">Copy image</button>
+          </div>
+          <div class="actions two-col">
+            <button class="btn ghost" id="save" type="button">Save design</button>
+            <button class="btn ghost" id="share" type="button">Copy design link</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================= BULK ================= -->
+  <section id="view-bulk" class="view" hidden>
+    <div class="hero"><h1>Bulk QR codes</h1><p>Paste a list and get a ZIP of images, all in your current design. Perfect for event tickets, table numbers or product labels.</p></div>
+    <div class="bulk">
+      <div class="panel">
+        <label class="fld">One per line. Optional label first: <code>Label | content</code>
+          <textarea id="bulk-text" rows="10" placeholder="Table 1 | https://example.com/menu?t=1&#10;Table 2 | https://example.com/menu?t=2&#10;https://example.com/offer"></textarea>
+        </label>
+        <div class="row">
+          <label class="fld">Treat each line as
+            <select id="bulk-mode"><option value="url">A website link (adds https://)</option><option value="text">Plain text</option></select>
+          </label>
+          <label class="fld">Image size
+            <select id="bulk-px"><option value="512">512 px</option><option value="1024" selected>1024 px</option><option value="2048">2048 px</option></select>
+          </label>
+        </div>
+        <label class="check"><input type="checkbox" id="bulk-label"> Use the label as the card title or badge text</label>
+        <div class="actions">
+          <label class="btn ghost file">Load CSV or TXT<input type="file" id="bulk-file" accept=".csv,.txt,text/plain" hidden></label>
+          <button class="btn" id="bulk-go" type="button">Generate</button>
+          <button class="btn" id="bulk-zip" type="button" disabled>Download ZIP</button>
+        </div>
+        <p class="hint" id="bulk-status">Uses the design from the Studio tab. Up to 300 lines.</p>
+      </div>
+      <div class="grid-out" id="bulk-out"></div>
+    </div>
+  </section>
+
+  <!-- ================= SAVED ================= -->
+  <section id="view-saved" class="view" hidden>
+    <div class="hero"><h1>Saved designs</h1><p>Stored only in this browser. Open a design to keep editing it.</p></div>
+    <div class="grid-out" id="saved-out"></div>
+  </section>
+
+  <!-- ================= HELP ================= -->
+  <section id="view-help" class="view" hidden>
+    <div class="hero"><h1>Help &amp; good to know</h1></div>
+    <div class="help">
+      <article class="panel"><h3>Static, so it never expires</h3><p>These QR codes contain your information directly. They work forever, cost nothing and cannot be switched off. The trade-off is that you can’t change the link later or count scans. If you need either, print a short link you control instead.</p></article>
+      <article class="panel"><h3>Private by design</h3><p>Everything is made in your browser. Your text, photos and logos are never uploaded. Saved designs live in your browser’s storage only.</p></article>
+      <article class="panel"><h3>Make it scan every time</h3><ul><li>Dark pattern on a light background scans best.</li><li>Keep the logo at 22% or less.</li><li>Shorter links make simpler, easier codes.</li><li>Print at least 2 cm (¾ in) wide. Test with a phone first.</li><li>Watch the scan check under the preview.</li></ul></article>
+      <article class="panel"><h3>Shortcuts</h3><ul><li><code>?url=https://…</code> after the address pre-fills a link.</li><li>“Copy design link” shares your style (not your logo) with anyone.</li><li>Install it as an app from your browser menu to use it offline.</li></ul></article>
+      <article class="panel"><h3>Open source</h3><p>Built with plain HTML, CSS and JavaScript by Almero Badenhorst. QR encoding by <a href="https://github.com/kazuhikoarase/qrcode-generator" target="_blank" rel="noopener">qrcode-generator</a>, scan check by <a href="https://github.com/cozmo/jsQR" target="_blank" rel="noopener">jsQR</a>.</p></article>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>Made by <a href="https://sneeuman.github.io/personal-website/" target="_blank" rel="noopener">Almero Badenhorst</a></span>
+  <span class="dot">·</span>
+  <a href="https://github.com/Sneeuman" target="_blank" rel="noopener">GitHub</a>
+  <span class="dot">·</span>
+  <a href="https://www.linkedin.com/in/almero-badenhorst-b879a4302/" target="_blank" rel="noopener">LinkedIn</a>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="vendor/qrcode.js"></script>
+<script src="vendor/jsQR.js"></script>
+<script src="js/payloads.js"></script>
+<script src="js/qr-core.js"></script>
+<script src="js/render.js"></script>
+<script src="js/export.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/scancheck.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
